@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_select_collections, only: [:edit, :update, :new, :create]
 
   # GET /posts
   # GET /posts.json
@@ -15,6 +16,9 @@ class PostsController < ApplicationController
   # GET /posts/new
   def new
     @post = Post.new
+    @tags = Tag.all
+    # @tag = Post.build_tag
+    # byebug
   end
 
   # GET /posts/1/edit
@@ -24,13 +28,16 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
+    # byebug
     @post = Post.new(post_params)
 
     respond_to do |format|
       if @post.save
+        # byebug
         format.html { redirect_to @post, notice: 'Post was successfully created.' }
         format.json { render action: 'show', status: :created, location: @post }
       else
+        # byebug
         format.html { render action: 'new' }
         format.json { render json: @post.errors, status: :unprocessable_entity }
       end
@@ -69,6 +76,11 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(:name)
+      # byebug
+      params.require(:post).permit(:name, :content, tag_ids: [])
+    end
+
+    def set_select_collections
+      @tags = Tag.all
     end
 end
